@@ -67,7 +67,7 @@ Si añades `~/.local/bin` a tu `PATH` (el instalador te avisa si no lo está), p
 
 Todos estos comandos tienen también su alias en inglés (`encrypt`, `decrypt`, `update`, `change-password`, `add-password`, `remove-password`...), por si prefieres escribir así. Y si prefieres los diálogos gráficos desde la terminal, están las variantes `gui`, `gui-encrypt <ruta>` y `gui-menu <vault.cvault>`, que son justo las que usan internamente el menú de aplicaciones, el escritorio y Nemo.
 
-## La ventaja real: contraseñas independientes por vault
+## Contraseñas independientes por vault
 
 La mayoría de herramientas de "cifrar con contraseña" atan los datos a una única contraseña: si quieres compartir el acceso con alguien más, o cambiarla, tienes que volver a cifrarlo todo desde cero.
 
@@ -77,7 +77,7 @@ Enkripta funciona distinto, de forma parecida a los *keyslots* de LUKS: los dato
 - Añadir, cambiar o eliminar una contraseña es una operación pequeña y rápida: **no vuelve a cifrar el contenido**, solo la clave envuelta en ese hueco.
 - Puedes quitarle el acceso a alguien (eliminando su contraseña) sin tocar el resto ni volver a subir/mover el archivo cifrado entero.
 
-## Seguridad, en resumen
+## Seguridad
 
 - Cifrado simétrico **AES-256** vía GPG.
 - Derivación de clave reforzada: `S2K` modo 3, más de 65 millones de iteraciones, `SHA-512`.
@@ -93,7 +93,6 @@ En otros entornos de escritorio (GNOME, KDE, XFCE...) el instalador seguirá fun
 ## Roadmap
 
 - [ ] Versión en inglés del programa y de esta documentación, si hay suficiente interés.
-- [ ] Plantillas de incidencias y *pull requests* para el repositorio.
 - [ ] Explorar soporte para otros gestores de archivos (Nautilus, Dolphin) si hay demanda.
 
 ## Estructura del repositorio
