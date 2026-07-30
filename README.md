@@ -6,6 +6,7 @@ Enkripta cifra carpetas y archivos en Linux Mint (Cinnamon/Nemo) con AES-256, y 
 
 > 🇪🇸 Este proyecto y esta documentación están, por ahora, solo en español. Si hay interés real por parte de la comunidad, se preparará una versión en inglés (ver [Roadmap](#roadmap)).
 
+<img width="772" height="525" alt="Enkripta-menudescifrar" src="https://github.com/user-attachments/assets/59414652-e382-4b6c-b465-111e6dc112e9" />
 <img width="408" height="269" alt="Enkripta-menucifrar" src="https://github.com/user-attachments/assets/6db29500-ad01-4a72-8b80-b2eeb2f44341" />
 <img width="458" height="368" alt="Enkripta-inicio" src="https://github.com/user-attachments/assets/72a9aa32-3355-4b72-9109-ba3fc7cbf2c7" />
 <img width="772" height="525" alt="Enkripta-menudescifrar" src="https://github.com/user-attachments/assets/779d8d73-c9c3-4362-9238-7be40d330355" />
