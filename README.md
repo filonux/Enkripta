@@ -106,6 +106,7 @@ enkripta/
 ├── assets/
 │   └── icon/
 │       └── enkripta.svg
+│       └── icon.png
 └── .github/                     # plantillas de incidencias y pull requests
 ```
 
