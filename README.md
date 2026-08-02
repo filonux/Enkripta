@@ -6,10 +6,13 @@ Enkripta cifra carpetas y archivos en Linux Mint (Cinnamon/Nemo) con AES-256, y 
 
 > 🇪🇸 Este proyecto y esta documentación están, por ahora, solo en español. Si hay interés real por parte de la comunidad, se preparará una versión en inglés (ver [Roadmap](#roadmap)).
 
-<img width="772" height="525" alt="Enkripta-menudescifrar" src="https://github.com/user-attachments/assets/59414652-e382-4b6c-b465-111e6dc112e9" />
-<img width="408" height="269" alt="Enkripta-menucifrar" src="https://github.com/user-attachments/assets/6db29500-ad01-4a72-8b80-b2eeb2f44341" />
-<img width="458" height="368" alt="Enkripta-inicio" src="https://github.com/user-attachments/assets/72a9aa32-3355-4b72-9109-ba3fc7cbf2c7" />
-<img width="772" height="525" alt="Enkripta-menudescifrar" src="https://github.com/user-attachments/assets/779d8d73-c9c3-4362-9238-7be40d330355" />
+
+<img width="458" height="368" alt="1  Enkripta-inicio" src="https://github.com/user-attachments/assets/a7775e16-595c-47c2-af40-000b06377bbb" />
+<img width="772" height="525" alt="2  Enkripta-menudescifrar" src="https://github.com/user-attachments/assets/009dce6d-50cb-4e86-8985-f3f62ac7a45e" />
+<img width="408" height="269" alt="3  Enkripta-menucifrar" src="https://github.com/user-attachments/assets/46b47f15-8cfe-4652-be99-ced27698316e" />
+<img width="794" height="540" alt="4  Enkripta-descifrado" src="https://github.com/user-attachments/assets/afb3e7fb-4004-47aa-af07-a70f5a5f25cb" />
+<img width="388" height="202" alt="5  Enkripta-menuabrir" src="https://github.com/user-attachments/assets/50a8a6ee-a20f-463d-a0e7-ea39d4c57242" />
+
 
 ## Instalación por terminal o descargar ZIP
 
