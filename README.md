@@ -17,7 +17,7 @@ Enkripta cifra carpetas y archivos en Linux Mint (Cinnamon/Nemo) con AES-256, y 
 ## Instalación por terminal o descargar ZIP
 
 ```bash
-git clone https://github.com/filonux/enkripta.git
+git clone https://github.com/filonux/Enkripta.git
 cd enkripta
 chmod +x script/enkripta-instalador.sh
 ./script/enkripta-instalador.sh
