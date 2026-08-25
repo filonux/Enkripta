@@ -1,4 +1,4 @@
-<img src="assets/icon/enkripta.svg" width="88" align="right" alt="Icono de Enkripta">
+<img src="assets/icon/enkripta.svg" width="140" align="right" alt="Icono de Enkripta">
 
 # Enkripta
 
