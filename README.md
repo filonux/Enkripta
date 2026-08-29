@@ -97,22 +97,12 @@ En otros entornos de escritorio (GNOME, KDE, XFCE...) el instalador seguirá fun
 
 - [ ] Versión en inglés del programa y de esta documentación, si hay suficiente interés.
 - [ ] Explorar soporte para otros gestores de archivos (Nautilus, Dolphin) si hay demanda.
-
-## Estructura del repositorio
-
-```
-enkripta/
-├── LICENSE
-├── README.md
-├── script/
-│   └── enkripta-instalador.sh   # instalador único: incluye el programa y el icono embebidos
-├── assets/
-│   └── icon/
-│       └── enkripta.svg
-│       └── icon.png
-└── .github/                     # plantillas de incidencias y pull requests
-```
-
+- [ ] Paquete `.deb` para instalar con un doble clic, sin pasar por `git clone`
+      
 ## Licencia
 
 Enkripta es software libre distribuido bajo los términos de la **GNU General Public License versión 3 (GPLv3)**. Consulta el archivo [LICENSE](LICENSE) para el texto completo.
+
+---
+
+Hecho por **Filonux**.
