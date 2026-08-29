@@ -105,4 +105,4 @@ Enkripta es software libre distribuido bajo los términos de la **GNU General Pu
 
 ---
 
-Hecho por **Filonux**
+Hecho por **[Filonux](https://github.com/filonux)**.
