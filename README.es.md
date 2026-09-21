@@ -4,7 +4,7 @@
 
 Enkripta cifra carpetas y archivos en Linux Mint (Cinnamon/Nemo) con AES-256, y hace que parezca parte del propio sistema: doble clic en el escritorio, botón derecho en Nemo, icono propio para los archivos cifrados. Todo se instala con un único script, sin dependencias raras y sin tocar nada fuera de tu carpeta personal (no hace falta `sudo`).
 
-> 🇪🇸 Estás leyendo la versión en español. La documentación principal está ahora en inglés: [English](README.md).
+> 🇪🇸 La documentación principal está ahora en inglés: [English](README.md).
 
 ## Novedades
 
@@ -26,12 +26,10 @@ Enkripta cifra carpetas y archivos en Linux Mint (Cinnamon/Nemo) con AES-256, y 
 
 ## Capturas
 
-<img width="458" height="368" alt="1  Enkripta-inicio" src="https://github.com/user-attachments/assets/a7775e16-595c-47c2-af40-000b06377bbb" />
-<img width="772" height="525" alt="2  Enkripta-menudescifrar" src="https://github.com/user-attachments/assets/009dce6d-50cb-4e86-8985-f3f62ac7a45e" />
-<img width="408" height="269" alt="3  Enkripta-menucifrar" src="https://github.com/user-attachments/assets/46b47f15-8cfe-4652-be99-ced27698316e" />
-<img width="794" height="540" alt="4  Enkripta-descifrado" src="https://github.com/user-attachments/assets/afb3e7fb-4004-47aa-af07-a70f5a5f25cb" />
-<img width="388" height="202" alt="5  Enkripta-menuabrir" src="https://github.com/user-attachments/assets/50a8a6ee-a20f-463d-a0e7-ea39d4c57242" />
-
+<img width="459" height="421" alt="Enkripta-menu-es" src="https://github.com/user-attachments/assets/9890ab04-2f46-4a1f-8af7-759f2a0aefb4" />
+<img width="364" height="276" alt="confi-pass-es" src="https://github.com/user-attachments/assets/395f5aa1-eed3-4aaa-a3ad-3b06b8fc1de4" />
+<img width="364" height="276" alt="confi-pass-es" src="https://github.com/user-attachments/assets/e0ff06c8-2a68-46bd-83b2-5733edc7181b" />
+<img width="471" height="342" alt="nemo-options-es" src="https://github.com/user-attachments/assets/2c857eff-08f3-4207-81fe-a748b500cb46" />
 
 ## Instalación por terminal o descarga del ZIP
 
