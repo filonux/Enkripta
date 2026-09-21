@@ -1,7 +1,7 @@
-# Política de seguridad
+# Security Policy
 
-Enkripta es un script de uso local: si encuentras un problema real o fallo de seguridad, repórtalo en privado en vez de abrir un issue público.
+Enkripta is a local-use script: if you find a genuine issue or security vulnerability, please report it privately instead of opening a public issue.
 
-## Cómo reportarlo
+## How to report it
 
-Escribe a **Filonux** con una descripción del problema y, si puedes, los pasos para reproducirlo.
+Do not open a public issue for a vulnerability. Use GitHub’s private vulnerability reporting mechanism if it is enabled for this repository. If that option is not available, contact Filonux (email) privately and include a description of the issue, its impact, and, if possible, the steps to reproduce it.
