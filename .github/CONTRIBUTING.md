@@ -1,18 +1,18 @@
-# Contribuir
+# Contributing
 
-Gracias por el interés. Esto es lo básico:
+Thank you for your interest. Here are the basics:
 
-## Reportar un error o proponer una mejora
+## Report a bug or suggest an improvement
 
-Abre un issue — hay una plantilla para cada caso.
+Open an issue — there’s a template for each case.
 
-## Enviar un cambio
+## Submit a change
 
-1. Haz un fork y crea una rama a partir de la última versión.
-2. Prueba el cambio
-3. Abre el pull request — la plantilla te guía sobre qué contar.
+1. Fork the repository and create a branch from the latest version.
+2. Test the change.
+3. Open a pull request — the template guides you on what to include.
 
-## Estilo del código
+## Code Style
 
-- Comentarios solo donde aclaran un porqué no obvio, no para repetir lo que ya dice el código.
-- Si el cambio toca iconos, ficheros `.desktop` o rutas de escritorio: se prueba principalmente en Cinnamon, así que indica en el PR si podría afectar a otros entornos.
+- Comments should only be used to explain a non-obvious “why,” not to repeat what the code already says.
+- If the change affects icons, `.desktop` files, or desktop paths, it is primarily tested on Cinnamon, so mention in the PR if it could affect other desktop environments.
