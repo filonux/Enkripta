@@ -1,10 +1,9 @@
 ---
 name: Custom issue template
-about: Describe this issue template's purpose here.
+about: Report a question, documentation issue, or other topic.
 title: ''
 labels: ''
 assignees: ''
 
 ---
-
 
