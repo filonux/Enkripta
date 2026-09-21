@@ -1,9 +1,11 @@
-# Código de conducta
+# Code of Conduct
 
-Este es un proyecto pequeño, mantenido por una persona. La norma es simple: trata a los demás con respeto.
+This is a small project maintained by one person. The rule is simple: treat others with respect.
 
-- Sé constructivo en issues y pull requests: críticas al código, sí; ataques a personas, no.
-- No se tolera acoso, lenguaje discriminatorio ni comportamiento deliberadamente hostil.
-- Si tienes un problema con la conducta de alguien en este repositorio, escribe a **[tu-email-o-usuario-de-contacto]**.
+- Be constructive in issues and pull requests: criticize the code, not the people.
 
-Quien mantiene el proyecto puede eliminar comentarios, cerrar issues o pull requests, o bloquear a quien incumpla esto, sin más explicación que la necesaria.
+- Harassment, discriminatory language, and deliberately hostile behavior are not tolerated.
+
+If you have a concern about someone’s conduct in this repository, report it privately to the maintainer, **[Filonux](https://github.com/filonux)**, rather than opening a public issue.
+
+- The project maintainer may remove comments, close issues or pull requests, or block anyone who violates these guidelines, with no further explanation than necessary.
