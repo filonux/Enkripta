@@ -1,10 +1,12 @@
-## Descripción
-Breve descripción de los cambios que realizas con este Pull Request.
+## Description
+Briefly describe the changes in this pull request.
 
-## Tipo de cambio
-- [ ] Corrección de error (bug fix)
-- [ ] Nueva característica (new feature)
-- [ ] Cambio que rompe la compatibilidad (breaking change)
+## Type of change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation
+- [ ] Tests or tooling
 
-## ¿Cómo se ha probado?
-Describe los pasos que has seguido para probar estos cambios.
+## Testing
+Describe the tests or manual checks you ran. Include any relevant environment details.
