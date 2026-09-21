@@ -28,6 +28,9 @@ Enkripta cifra carpetas y archivos en Linux Mint (Cinnamon/Nemo) con AES-256, y 
 
 <img width="459" height="421" alt="Enkripta-menu-es" src="https://github.com/user-attachments/assets/9890ab04-2f46-4a1f-8af7-759f2a0aefb4" />
 <img width="364" height="276" alt="confi-pass-es" src="https://github.com/user-attachments/assets/395f5aa1-eed3-4aaa-a3ad-3b06b8fc1de4" />
+<img width="794" height="540" alt="Enkripta-descifrado-es" src="https://github.com/user-attachments/assets/49668055-451c-4641-9b89-7ebd0e26a0a8" />
+<img width="787" height="542" alt="Enkripta-segundo-pass-es" src="https://github.com/user-attachments/assets/3a0ac8d3-362f-4d0a-bea0-e7b5706e4f4f" />
+
 <img width="364" height="276" alt="confi-pass-es" src="https://github.com/user-attachments/assets/e0ff06c8-2a68-46bd-83b2-5733edc7181b" />
 <img width="471" height="342" alt="nemo-options-es" src="https://github.com/user-attachments/assets/2c857eff-08f3-4207-81fe-a748b500cb46" />
 
