@@ -29,6 +29,7 @@ Enkripta encrypts folders and files on Linux Mint (Cinnamon/Nemo) with AES-256, 
 <img width="460" height="413" alt="Enkripta-menu-en" src="https://github.com/user-attachments/assets/86a12882-8f8b-4ff6-8401-2a1e0ff55d9d" />
 <img width="522" height="315" alt="confi-pass-en" src="https://github.com/user-attachments/assets/a812c4c2-8e4d-4218-8778-aa7e95511ecb" />
 <img width="331" height="280" alt="confi-pass2-en" src="https://github.com/user-attachments/assets/5705aa13-43d8-4905-948f-4204f89f445b" />
+
 <img width="481" height="336" alt="nemo-options-en" src="https://github.com/user-attachments/assets/bee767d9-a97b-4aeb-830c-d7674c1f5c1a" />
 
 ## Install from the terminal or ZIP
