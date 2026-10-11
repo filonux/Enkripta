@@ -4,7 +4,7 @@
 
 Enkripta cifra carpetas y archivos en Linux Mint (Cinnamon/Nemo) con AES-256, y hace que parezca parte del propio sistema: doble clic en el escritorio, botón derecho en Nemo, icono propio para los archivos cifrados. Todo se instala con un único script, sin dependencias raras y sin tocar nada fuera de tu carpeta personal (no hace falta `sudo`).
 
-> 🇪🇸 La documentación principal está ahora en inglés: [English](README.md).
+> La documentación principal está ahora en inglés: [English](README.md).
 
 ## Novedades
 
