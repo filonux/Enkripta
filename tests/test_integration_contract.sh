@@ -391,7 +391,9 @@ python3 - "$ROOT_DIR" "$INSTALLER" <<'PY'
 from pathlib import Path
 import re, sys
 root=Path(sys.argv[1]); script=Path(sys.argv[2]).read_text(encoding='utf-8')
-files=list(root.rglob('*.md'))+[root/'.github'/'pull_request_template']
+# rglob also matches .github/pull_request_template.md (hidden directories are not skipped),
+# so the template must not be added by hand: its real name has the .md extension.
+files=list(root.rglob('*.md'))
 link_pat=re.compile(r'\[[^\]]+\]\(([^)]+)\)')
 html_pat=re.compile(r'(?:src|href)=["\']([^"\']+)["\']')
 errors=[]
