@@ -1,0 +1,80 @@
+name: Tests
+
+on:
+  push:
+    branches: [Filonux-Box]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    # Enkripta se prueba sobre Linux Mint 22.x, que se basa en Ubuntu 24.04.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # python3-pil + una fuente: sin ellos test_ui_aesthetics.sh no renderiza
+      # los diálogos y termina en SKIP. Las librerías de Pango las carga por ctypes.
+      - name: Instalar dependencias
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gnupg python3-pil fonts-noto-core libpango-1.0-0 libpangocairo-1.0-0
+
+      # Algunos tests ejecutan el instalador como el usuario "nobody" (runuser),
+      # que necesita poder leer el repositorio. Se trabaja sobre una copia en una
+      # ruta que no depende de los permisos del directorio del runner.
+      - name: Preparar copia legible por otros usuarios
+        run: |
+          sudo rm -rf /opt/enkripta-ci
+          sudo cp -a "$GITHUB_WORKSPACE" /opt/enkripta-ci
+          sudo chmod -R a+rX /opt/enkripta-ci
+
+      # Todas las suites se ejecutan como root (sudo): runuser lo exige, y
+      # test_suite_sensitivity.sh daría falsos "detectado" si las suites que
+      # lanza fallaran por falta de permisos en vez de por el bug introducido.
+      # Se usa "bash" porque los .sh del repositorio no tienen bit de ejecución.
+      # "!cancelled()" hace que cada suite se ejecute aunque una anterior falle.
+      # XDG_CACHE_HOME apunta fuera de $HOME: si el sistema tiene GVFS, "gio set"
+      # crea ~/.cache y test_enkripta.sh falla al comprobar que desinstalar no
+      # deja rastro en $HOME. Con la caché fuera, el resultado no depende de ello.
+      - name: test_enkripta.sh (comportamiento base)
+        working-directory: /opt/enkripta-ci
+        run: sudo env XDG_CACHE_HOME=/tmp/xdg-cache-ci bash tests/test_enkripta.sh
+
+      - name: test_ui_aesthetics.sh (diálogos gráficos)
+        if: ${{ !cancelled() }}
+        working-directory: /opt/enkripta-ci
+        run: sudo env XDG_CACHE_HOME=/tmp/xdg-cache-ci bash tests/test_ui_aesthetics.sh
+
+      - name: test_real_simulation.sh (uso de extremo a extremo)
+        if: ${{ !cancelled() }}
+        working-directory: /opt/enkripta-ci
+        run: sudo env XDG_CACHE_HOME=/tmp/xdg-cache-ci bash tests/test_real_simulation.sh
+
+      - name: test_integration_contract.sh (Desktop Entry, MIME, Nemo, docs)
+        if: ${{ !cancelled() }}
+        working-directory: /opt/enkripta-ci
+        run: sudo env XDG_CACHE_HOME=/tmp/xdg-cache-ci bash tests/test_integration_contract.sh
+
+      - name: test_adversarial_regression.sh (entradas hostiles)
+        if: ${{ !cancelled() }}
+        working-directory: /opt/enkripta-ci
+        run: sudo env XDG_CACHE_HOME=/tmp/xdg-cache-ci bash tests/test_adversarial_regression.sh
+
+      - name: test_suite_sensitivity.sh (comprueba los propios tests)
+        if: ${{ !cancelled() }}
+        working-directory: /opt/enkripta-ci
+        run: sudo env XDG_CACHE_HOME=/tmp/xdg-cache-ci bash tests/test_suite_sensitivity.sh

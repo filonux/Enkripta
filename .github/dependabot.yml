@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # Mantiene al día las acciones usadas en .github/workflows (p. ej. actions/checkout).
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    # Espera 7 días antes de proponer una versión recién publicada.
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: ci
