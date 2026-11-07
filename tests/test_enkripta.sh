@@ -192,6 +192,44 @@ assert_contains "$TMP/unknown-es.txt" 'Opción no reconocida:'
 unset ENKRIPTA_LANG
 pass 'Language-independent version output and localized errors'
 
+# check_deps must name the apt package that provides each missing command
+# (gunzip -> gzip, shred -> coreutils, find -> findutils, gpg -> gnupg), never
+# the command itself: "sudo apt install gunzip" does not exist. Each run hides
+# one command; mktemp, chmod and rm stay visible because the program needs them
+# before check_deps runs.
+DEPS_BIN="$TMP/deps-bin"
+for missing in gpg tar gzip gunzip shred base64 realpath find; do
+    case "$missing" in
+        gpg)                   want=gnupg ;;
+        gunzip)                want=gzip ;;
+        shred|base64|realpath) want=coreutils ;;
+        find)                  want=findutils ;;
+        *)                     want="$missing" ;;
+    esac
+    rm -rf "$DEPS_BIN"; mkdir "$DEPS_BIN"
+    for b in gpg tar gzip gunzip shred base64 realpath find mktemp chmod rm; do
+        [ "$b" = "$missing" ] || ln -s "$(command -v "$b")" "$DEPS_BIN/$b"
+    done
+    for lang in en es; do
+        status=0
+        out="$(ENKRIPTA_LANG=$lang PATH="$DEPS_BIN" "$BASH" "$MAIN" encrypt "$TMP/none" 2>&1)" || status=$?
+        [ "$status" -eq 1 ] || fail "check_deps with '$missing' hidden [$lang] exited $status instead of 1 (got: $out)"
+        case "$out" in
+            *"$missing"*"sudo apt install $want") ;;
+            *) fail "check_deps: wrong apt package for missing '$missing' [$lang] (got: $out)" ;;
+        esac
+    done
+    # Where dpkg exists, also check the suggestion against the real package
+    # database. gnupg is the metapackage that brings gpg, gpg-agent and the rest.
+    if command -v dpkg >/dev/null 2>&1; then
+        owner="$(dpkg -S "$(readlink -f "$(command -v "$missing")")" 2>/dev/null | cut -d: -f1 || true)"
+        if [ "$owner" != "$want" ] && ! { [ "$missing" = gpg ] && [ "$owner" = gpg ]; }; then
+            fail "check_deps suggests '$want' for '$missing' but dpkg says it belongs to '${owner:-no package}'"
+        fi
+    fi
+done
+pass 'check_deps suggests the apt package that provides each missing command'
+
 python3 - "$MAIN" <<'PY_ALIAS'
 from pathlib import Path
 import re, sys
@@ -503,6 +541,55 @@ pass 'Installer uninstall removes the program and every trace of the integration
 leftover="$(find "$HOME" -mindepth 1 | sort)"
 assert_eq "$leftover" "$(dirname "$DESK")" 'uninstall left files behind: not truly "no trace"'
 pass 'Uninstall leaves no trace under $HOME'
+
+# Install over a HOME that already holds user data: reinstalling must change
+# nothing, and uninstalling must give back exactly what was there before.
+# XDG_CONFIG_HOME stays unset (the real default, ~/.config) and XDG_CACHE_HOME
+# points outside HOME so a GVFS "gio set" cannot create ~/.cache.
+UH="$TMP/userhome"
+as_user() { env -u XDG_CONFIG_HOME -u XDG_DATA_HOME HOME="$UH" XDG_CACHE_HOME="$TMP/cache-userhome" ENKRIPTA_LANG=en "$@"; }
+snap_files() { (cd "$UH" && find . -mindepth 1 -printf '%y %m %p\n' | LC_ALL=C sort && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum); }
+mkdir -p "$UH/.config/otro" "$UH/.local/bin" "$UH/.local/share/applications" "$UH/.local/share/nemo/actions" \
+    "$UH/.local/share/mime/packages" "$UH/.local/share/icons/hicolor/scalable/apps" "$UH/.gnupg/private-keys-v1.d" "$UH/Desktop"
+# An empty-valued key and a comment are the user's, not Enkripta's: they must survive.
+printf '[Default Applications]\ntext/plain=gedit.desktop;\nx-scheme-handler/foo=\n\n[Added Associations]\napplication/pdf=evince.desktop;\n# mine\n' >"$UH/.config/mimeapps.list"
+printf '[Default Applications]\nimage/png=viewer.desktop;\n' >"$UH/.local/share/applications/defaults.list"
+printf 'x=1\n' >"$UH/.config/otro/app.conf"
+printf '#!/bin/sh\n' >"$UH/.local/bin/mytool"; chmod 755 "$UH/.local/bin/mytool"
+printf '[Desktop Entry]\nType=Application\nName=Otro\nExec=otro %%f\nMimeType=text/x-otro;\n' >"$UH/.local/share/applications/otro.desktop"
+printf '[Nemo Action]\nName=Mine\nExec=true\n' >"$UH/.local/share/nemo/actions/mine.nemo_action"
+printf '<?xml version="1.0" encoding="UTF-8"?>\n<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info"><mime-type type="text/x-otro"><comment>Otro</comment><glob pattern="*.otro"/></mime-type></mime-info>\n' >"$UH/.local/share/mime/packages/mine.xml"
+printf '<svg xmlns="http://www.w3.org/2000/svg"/>\n' >"$UH/.local/share/icons/hicolor/scalable/apps/mine.svg"
+head -c 4096 /dev/zero >"$UH/.gnupg/pubring.kbx"; printf 'key\n' >"$UH/.gnupg/private-keys-v1.d/a.key"   # a keyring with content is not "newborn"
+printf '[Desktop Entry]\n' >"$UH/Desktop/otro.desktop"
+# The caches a real system already has, built by the same tools the installer calls.
+if command -v update-mime-database >/dev/null 2>&1; then update-mime-database "$UH/.local/share/mime" >/dev/null 2>&1; fi
+if command -v update-desktop-database >/dev/null 2>&1; then update-desktop-database "$UH/.local/share/applications" >/dev/null 2>&1; fi
+before="$(snap_files)"
+as_user bash "$INSTALLER" >"$TMP/ud-install.txt" 2>&1 || fail "install over user data failed: $(cat "$TMP/ud-install.txt")"
+assert_file "$UH/.local/bin/enkripta.sh"
+assert_eq "$(grep -c 'enkripta\.desktop' "$UH/.config/mimeapps.list")" 1 'the .cvault association was not added once to the user mimeapps.list'
+first="$(snap_files)"
+as_user bash "$INSTALLER" >"$TMP/ud-reinstall.txt" 2>&1 || fail "reinstall failed: $(cat "$TMP/ud-reinstall.txt")"
+[ "$(snap_files)" = "$first" ] || fail "reinstall is not idempotent: $(diff <(printf '%s\n' "$first") <(snap_files) | head -5)"
+as_user bash "$INSTALLER" --uninstall >"$TMP/ud-uninstall.txt" 2>&1 || fail "uninstall over user data failed: $(cat "$TMP/ud-uninstall.txt")"
+[ "$(snap_files)" = "$before" ] || fail "uninstall did not restore the user's files: $(diff <(printf '%s\n' "$before") <(snap_files) | head -5)"
+pass 'Install, reinstall and uninstall over existing user data restore every user file and folder'
+
+# The desktop shortcut goes to the folder xdg-user-dir reports (Escritorio on a
+# Spanish system), and uninstall must find it even when a later run would pick a
+# different folder: with both Desktop and Escritorio present it picks Desktop.
+UH="$TMP/eshome"
+mkdir -p "$UH/Desktop" "$UH/Escritorio" "$TMP/xdgbin"
+printf '#!/bin/sh\necho "%s"\n' "$UH/Escritorio" >"$TMP/xdgbin/xdg-user-dir"; chmod +x "$TMP/xdgbin/xdg-user-dir"
+before="$(snap_files)"
+as_user env PATH="$TMP/xdgbin:$PATH" bash "$INSTALLER" >"$TMP/es-install.txt" 2>&1 || fail "install with an Escritorio folder failed: $(cat "$TMP/es-install.txt")"
+assert_file "$UH/Escritorio/enkripta.desktop"
+[ ! -e "$UH/Desktop/enkripta.desktop" ] || fail 'shortcut went to Desktop although xdg-user-dir reports Escritorio'
+as_user bash "$INSTALLER" --uninstall >"$TMP/es-uninstall.txt" 2>&1 || fail "uninstall with an Escritorio folder failed: $(cat "$TMP/es-uninstall.txt")"
+[ ! -e "$UH/Escritorio/enkripta.desktop" ] || fail 'uninstall left the shortcut in Escritorio'
+[ "$(snap_files)" = "$before" ] || fail "uninstall did not restore the Escritorio HOME: $(diff <(printf '%s\n' "$before") <(snap_files) | head -5)"
+pass 'Desktop shortcut follows xdg-user-dir (Escritorio) and uninstall removes it from there'
 
 # User-visible English/Spanish strings must not be accidentally hard-coded in the opposite layer.
 python3 - "$MAIN" <<'PY'
