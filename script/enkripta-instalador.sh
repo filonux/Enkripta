@@ -2,28 +2,31 @@
 #
 # Copyright (C) 2026 Filonux
 #
-# Licencia:
-# Enkripta es software libre distribuido bajo los términos de la
-# GNU General Public License versión 3 (GPLv3).
-# Consulte el archivo LICENSE.txt para obtener el texto completo de la licencia.
+# License:
+# Enkripta is free software distributed under the terms of the
+# GNU General Public License version 3 (GPLv3).
+# See the LICENSE.txt file for the full text of the license.
 #
-# enkripta-instalador.sh — instalador de Enkripta para Cinnamon/Nemo (Linux
-# Mint) en un solo archivo: lleva embebidos el programa (enkripta.sh) y su
-# icono, así que puedes moverlo o descargarlo suelto y funciona igual.
+# enkripta-instalador.sh — Enkripta installer for Cinnamon/Nemo (Linux Mint) in
+# a single file: it embeds the program (enkripta.sh) and its icon, so you can
+# move it or download it on its own and it works the same.
 #
-# Instala: el programa en ~/.local/bin, su icono, un acceso en el menú de
-# Accesorios, el tipo MIME .cvault (con Enkripta como predeterminado), dos
-# acciones de clic derecho en Nemo —🔒 Cifrar / 🔓 Abrir vault, en el idioma
-# de Enkripta, no el del sistema, y quitables/añadibles desde su menú— y un
-# acceso directo en el Escritorio.
+# Installs: the program in ~/.local/bin, its icon, an entry in the Applications
+# menu (Accessories category), the .cvault MIME type (with Enkripta as the
+# default), two Nemo right-click actions (🔒 Encrypt with Enkripta / 🔓 Open
+# Enkripta vault) and a desktop shortcut. The actions follow Enkripta's
+# language, not the system's, and can be removed or re-added from the
+# program's menu.
 #
-# Uso:
-#   ./enkripta-instalador.sh                 instala/actualiza
-#   ./enkripta-instalador.sh --desinstalar   quita todo, sin dejar rastro
-#   ./enkripta-instalador.sh -l              cambia el idioma
-#   ./enkripta-instalador.sh --ayuda         muestra la ayuda
+# Usage:
+#   ./enkripta-instalador.sh                        install or update
+#   ./enkripta-instalador.sh --uninstall            remove everything, leaving no trace
+#   ./enkripta-instalador.sh -l, --toggle-language  switch the interface language
+#   ./enkripta-instalador.sh -h, --help             show the help
+#   (Spanish aliases --desinstalar and --ayuda are also accepted.)
 #
-# No hace falta sudo: se instala solo en tu carpeta personal.
+# Do not run it as root or with sudo (it refuses to): it installs only in your
+# home folder.
 
 set -euo pipefail
 
@@ -194,7 +197,8 @@ clean_mimeapps() {
     local f
     for f in "${XDG_CONFIG_HOME:-$HOME/.config}/mimeapps.list" "$APPS_DIR/mimeapps.list" "$APPS_DIR/defaults.list"; do
         [ -f "$f" ] || continue
-        sed -i -E --follow-symlinks -e 's/(=|;)enkripta\.desktop;?/\1/g' -e '/^[^=#]+=;*$/d' "$f" 2>/dev/null || true
+        # Solo las líneas con enkripta.desktop: una clave vacía del usuario no es nuestra.
+        sed -i -E --follow-symlinks -e '/enkripta\.desktop/{s/(=|;)enkripta\.desktop;?/\1/g;/^[^=#]+=;*$/d}' "$f" 2>/dev/null || true
         grep -Eqv '^[[:space:]]*($|\[.*\])' "$f" 2>/dev/null || rm -f -- "$f"
     done
 }
@@ -229,6 +233,8 @@ do_uninstall() {
     fi
     rmdir "$ICON_ROOT" "${ICON_ROOT%/*}" "$NEMO_ACTIONS_DIR" "${NEMO_ACTIONS_DIR%/*}" "$BIN_DIR" 2>/dev/null || true
     refresh_caches
+    # update-mime-database borra x-cvault.xml pero no la carpeta application/ que creó (solo si queda vacía).
+    rmdir "$MIME_ROOT/application" 2>/dev/null || true
     if ! compgen -G "$APPS_DIR/*.desktop" >/dev/null; then rm -f -- "$APPS_DIR/mimeinfo.cache"; fi
     rmdir "$APPS_DIR" "${APPS_DIR%/*}" "${APPS_DIR%/*/*}" "${XDG_CONFIG_HOME:-$HOME/.config}" 2>/dev/null || true
     if [ "$failed" = 1 ]; then warn "$(msg remove.partial)"; exit 1; fi
@@ -296,36 +302,38 @@ cat > "$DEST_SCRIPT" <<'ENKRIPTA_SH_EOF'
 #
 # Copyright (C) 2026 Filonux
 #
-# Licencia:
-# Enkripta es software libre distribuido bajo los términos de la
-# GNU General Public License versión 3 (GPLv3).
-# Consulte el archivo LICENSE.txt para obtener el texto completo de la licencia.
+# License:
+# Enkripta is free software distributed under the terms of the
+# GNU General Public License version 3 (GPLv3).
+# See the LICENSE.txt file for the full text of the license.
 #
-# enkripta.sh — Cifra y descifra carpetas o archivos con AES-256 (GPG simétrico)
-# Soporta varias contraseñas independientes para el mismo vault (como los "keyslots"
-# de LUKS): cualquiera de ellas desbloquea el contenido, y se pueden añadir, cambiar
-# o eliminar sin volver a cifrar los datos.
+# enkripta.sh — Encrypts and decrypts folders or files with AES-256 (symmetric GPG)
+# Supports several independent passwords for the same vault (like LUKS "keyslots"):
+# any of them unlocks the content, and they can be added, changed or removed
+# without re-encrypting the data.
 #
-# Uso interactivo (terminal):
-#   ./enkripta.sh cifrar   /ruta/a/carpeta_o_archivo
-#   ./enkripta.sh cifrar_facil /ruta        (detecta automáticamente qué hacer)
-#   ./enkripta.sh <archivo.cvault>          (abre el menú: descifrar / gestionar contraseñas)
+# Interactive use (terminal):
+#   ./enkripta.sh encrypt /path/to/folder_or_file
+#   ./enkripta.sh easy-encrypt /path        (detects what to do automatically)
+#   ./enkripta.sh <file.cvault>             (opens the menu: decrypt / manage passwords)
+#   (Spanish aliases such as cifrar and cifrar_facil are also accepted.)
 #
-# Uso gráfico (zenity), pensado para acceso directo / menú de aplicaciones / Nemo:
-#   ./enkripta.sh gui                       (lanzador sin argumentos: pregunta qué hacer)
-#   ./enkripta.sh gui <ruta_o_vault> [...]   (detecta automáticamente qué hacer, en modo gráfico)
-#   ./enkripta.sh gui-encrypt <archivo_o_carpeta> [...]
+# Graphical use (zenity), meant for shortcuts / applications menu / Nemo:
+#   ./enkripta.sh gui                       (launcher with no arguments: asks what to do)
+#   ./enkripta.sh gui <path_or_vault> [...] (detects what to do automatically, in graphical mode)
+#   ./enkripta.sh gui-encrypt <file_or_folder> [...]
 #   ./enkripta.sh gui-menu <vault.cvault> [...]
 #
-# La integración con Nemo (clic derecho, doble clic en .cvault, icono en el
-# menú de aplicaciones) la instala "enkripta-instalador.sh", que genera este
-# mismo archivo. Este script (enkripta.sh) también funciona solo, desde la
-# terminal, sin esa integración.
+# The Nemo integration (right-click, double-click on .cvault, icon in the
+# applications menu) is installed by "enkripta-instalador.sh", which generates
+# this very file. This script (enkripta.sh) also works on its own, from the
+# terminal, without that integration.
 #
-# Ver ./enkripta.sh --help para todos los subcomandos.
+# See ./enkripta.sh --help for all subcommands.
 #
-# Requisitos: gpg, tar, gzip, shred, base64 (todos vienen de serie en Linux Mint)
-# Opcional:   zenity (para los diálogos gráficos), notify-send (avisos de escritorio)
+# Requirements: gpg, tar, gzip, gunzip, shred, base64, realpath, find
+# Optional:     zenity (for the graphical dialogs), notify-send (desktop
+#               notifications), xdg-open (offers to open what was decrypted)
 
 set -euo pipefail
 
@@ -1039,9 +1047,17 @@ vault_size() {
 }
 
 check_deps() {
-    local bin
+    local bin pkg
     for bin in gpg tar gzip gunzip shred base64 realpath find; do
-        command -v "$bin" >/dev/null 2>&1 || err "$(msg cmd.missing "$bin" "$bin")"
+        command -v "$bin" >/dev/null 2>&1 && continue
+        case "$bin" in   # paquete de apt que aporta el comando (no siempre se llama igual)
+            gpg)                   pkg=gnupg ;;
+            gunzip)                pkg=gzip ;;
+            shred|base64|realpath) pkg=coreutils ;;
+            find)                  pkg=findutils ;;
+            *)                     pkg="$bin" ;;
+        esac
+        err "$(msg cmd.missing "$bin" "$pkg")"
     done
 }
 
