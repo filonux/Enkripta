@@ -68,7 +68,7 @@ Two things are deliberately treated with care because they are not Enkripta's: `
 
 ### Requirements
 
-To install and use Enkripta: `gpg`, `tar`, `gzip`, `shred`, `base64` and `realpath`. They are all included by default in Linux Mint. Optional but recommended: `zenity` (graphical dialogs) and `notify-send` (desktop notifications). If `zenity` is missing, the installer warns you and gives you the exact command to install it.
+To install and use Enkripta: `gpg`, `tar`, `gzip`, `gunzip`, `shred`, `base64`, `realpath` and `find`. Optional but recommended: `zenity` (graphical dialogs) and `notify-send` (desktop notifications). If `gpg` or `zenity` is missing, the installer warns you and gives you the exact command to install it.
 
 ## Usage
 
