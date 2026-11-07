@@ -70,7 +70,7 @@ Dos cosas se tratan con cuidado a propósito, porque no son de Enkripta: `~/.gnu
 
 ### Requisitos
 
-Para instalar y usar Enkripta: `gpg`, `tar`, `gzip`, `shred`, `base64` y `realpath`. Todos vienen de serie en Linux Mint. Opcional pero recomendado: `zenity` (los diálogos gráficos) y `notify-send` (avisos de escritorio). Si te falta `zenity`, el instalador te avisa y te da el comando exacto para instalarlo.
+Para instalar y usar Enkripta: `gpg`, `tar`, `gzip`, `gunzip`, `shred`, `base64`, `realpath` y `find`. Opcional pero recomendado: `zenity` (los diálogos gráficos) y `notify-send` (avisos de escritorio). Si te falta `gpg` o `zenity`, el instalador te avisa y te da el comando exacto para instalarlo.
 
 ## Uso
 
