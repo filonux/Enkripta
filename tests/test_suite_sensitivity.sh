@@ -120,7 +120,8 @@ then
 fi
 pass 'focused translation checker detects printf placeholder mutations'
 
-# Mutations 5-11: Nemo actions in Enkripta's language, and the zenity dialog quirks.
+# Mutations 5-17: Nemo actions in Enkripta's language, the zenity dialog quirks, the
+# apt package named by check_deps, what uninstall leaves of the user's files and the Escritorio folder.
 # Each mutated tree must fail the named suite AND print the expected marker, so a
 # suite that merely breaks for another reason cannot pass as "detected".
 mutate() { # mutate CASE OLD NEW   (OLD must occur exactly once; \n means a newline)
@@ -169,5 +170,29 @@ detected "$C" test_enkripta.sh 'GUI launch resyncs Nemo actions with the system 
 C=$(make_case mutation-nemo-resurrect)
 mutate "$C" 'if [ "$mode" != refresh ] || [ -f "$NEMO_ACT_OPEN" ]; then' 'if true; then'
 detected "$C" test_enkripta.sh 'a deleted Nemo action was recreated by -l' 'resurrecting a deleted Nemo action is detected'
+
+C=$(make_case mutation-deps-gunzip)
+mutate "$C" '            gunzip)                pkg=gzip ;;\n' ''
+detected "$C" test_enkripta.sh "check_deps: wrong apt package for missing 'gunzip'" 'a command name used as apt package in the check_deps hint is detected'
+
+C=$(make_case mutation-deps-gpg)
+mutate "$C" 'gpg)                   pkg=gnupg ;;' 'gpg)                   pkg=gpg ;;'
+detected "$C" test_enkripta.sh "check_deps: wrong apt package for missing 'gpg'" 'a changed gpg package in the check_deps hint is detected'
+
+C=$(make_case mutation-mimeapps-user-lines)
+mutate "$C" '{s/(=|;)enkripta\.desktop;?/\1/g;/^[^=#]+=;*$/d}' "s/(=|;)enkripta\\.desktop;?/\\1/g' -e '/^[^=#]+=;*\$/d"
+detected "$C" test_enkripta.sh "uninstall did not restore the user's files" 'uninstall rewriting unrelated lines of the user mimeapps.list is detected'
+
+C=$(make_case mutation-mime-application-dir)
+mutate "$C" '    rmdir "$MIME_ROOT/application" 2>/dev/null || true\n' ''
+detected "$C" test_enkripta.sh 'mime/application' 'an empty mime/application folder left by uninstall is detected'
+
+C=$(make_case mutation-uninstall-escritorio)
+mutate "$C" 'for d in "$DESKTOP_DIR" "$HOME/Desktop" "$HOME/Escritorio"; do' 'for d in "$DESKTOP_DIR" "$HOME/Desktop"; do'
+detected "$C" test_enkripta.sh 'uninstall left the shortcut in Escritorio' 'an uninstall that skips the Escritorio folder is detected'
+
+C=$(make_case mutation-xdg-user-dir)
+mutate "$C" '        d="$(xdg-user-dir DESKTOP 2>/dev/null || true)"' '        d=""'
+detected "$C" test_enkripta.sh 'Escritorio/enkripta.desktop' 'ignoring xdg-user-dir for the desktop shortcut is detected'
 
 printf '%s\n' 'SUITE SENSITIVITY: known high-risk mutations are detected.'
